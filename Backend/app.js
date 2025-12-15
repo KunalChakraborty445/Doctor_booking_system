@@ -7,11 +7,16 @@ import { dbConnection } from "./database/dbConnection.js";
 import  messageRouter  from "./router/messageRouter.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./router/userRouter.js";
-import appointmentRouter from "./router/appointmentRouter.js"
+import appointmentRouter from "./router/appointmentRouter.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 
 const app = express();
 config({ path: "./config.env" });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //middlewares
 app.use(express.json());
@@ -38,4 +43,15 @@ app.use("/api/v1/appointment", appointmentRouter);
 dbConnection();
 
 app.use(errorMiddleware);
+
+if (process.env.NODE_ENV === "production") {
+  app.use("/app", express.static(path.join(__dirname, "../frontend/dist")));
+  app.use("/dashboard", express.static(path.join(__dirname, "../dashboard/dist")));
+
+  app.get(["/app/*", "/dashboard/*"], (req, res) => {
+    const root = req.path.startsWith("/dashboard") ? "dashboard" : "frontend";
+    res.sendFile(path.join(__dirname, `../${root}/dist/index.html`));
+  });
+}
+
 export default app;
