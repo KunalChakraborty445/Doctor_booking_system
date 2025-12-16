@@ -214,5 +214,3 @@ npm run dev
 * SMS & Email gateway integration
 * Calendar sync (Google Calendar)
 
-
-* Customize this README for **resume / portfolio**
