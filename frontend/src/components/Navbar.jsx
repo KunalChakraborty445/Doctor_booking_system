@@ -4,6 +4,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../main";
+import Notifications from "./Notifications";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -48,9 +49,12 @@ const Navbar = () => {
             </Link>
           </div>
           {isAuthenticated ? (
-            <button className="logoutBtn btn" onClick={handleLogout}>
-              LOGOUT
-            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Notifications />
+              <button className="logoutBtn btn" onClick={handleLogout}>
+                LOGOUT
+              </button>
+            </div>
           ) : (
             <button className="loginBtn btn" onClick={goToLogin}>
               LOGIN

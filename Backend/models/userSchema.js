@@ -58,6 +58,13 @@ const userSchema = new mongoose.Schema({
     public_id: String,
     url: String,
   },
+  notifications: [
+    {
+      message: { type: String },
+      createdAt: { type: Date, default: Date.now },
+      isRead: { type: Boolean, default: false },
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {

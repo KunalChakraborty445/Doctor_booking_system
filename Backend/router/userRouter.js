@@ -7,7 +7,10 @@ import {
     login,
     patientRegister,
     logoutAdmin,
-    logoutPatient
+    logoutPatient,
+    getNotifications,
+    markNotificationRead,
+    markAllNotificationsRead
 } from "../controller/userController.js";
 import { isAdminAuthenticated,isPatientAuthenticated } from "../middlewares/auth.js";
 
@@ -20,6 +23,9 @@ router.post("/doctor/addnew", isAdminAuthenticated, addNewDoctor);
 router.get("/doctors", getAllDoctors);
 router.get("/admin/me", isAdminAuthenticated, getUserDetails);
 router.get("/patient/me", isPatientAuthenticated, getUserDetails);
+router.get("/patient/notifications", isPatientAuthenticated, getNotifications);
+router.put("/patient/notifications/:nid/read", isPatientAuthenticated, markNotificationRead);
+router.put("/patient/notifications/readall", isPatientAuthenticated, markAllNotificationsRead);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
 router.get("/patient/logout", isPatientAuthenticated, logoutPatient);
 

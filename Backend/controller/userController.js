@@ -194,6 +194,44 @@ export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const getNotifications = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select("notifications");
+  if (!user) return next(new ErrorHandler("User not found", 404));
+  const notes = Array.isArray(user.notifications) ? user.notifications : [];
+  res.status(200).json({ success: true, notifications: notes });
+});
+
+export const markNotificationRead = catchAsyncErrors(async (req, res, next) => {
+  const { nid } = req.params;
+  const userId = req.user._id;
+  console.log('[markNotificationRead] params:', { nid, userId });
+  const user = await User.findById(userId);
+  console.log('[markNotificationRead] found user:', user ? user._id : null, 'notificationsLength:', user && Array.isArray(user.notifications) ? user.notifications.length : 0);
+  if (!user) return next(new ErrorHandler("User not found", 404));
+  const notes = Array.isArray(user.notifications) ? user.notifications : [];
+  if (!notes || notes.length === 0) return next(new ErrorHandler("No notifications found", 404));
+  // use mongoose subdoc id lookup if available
+  const notif = typeof user.notifications.id === "function" ? user.notifications.id(nid) : notes.find((x) => String(x._id) === String(nid));
+  if (!notif) return next(new ErrorHandler("Notification not found", 404));
+  notif.isRead = true;
+  await user.save();
+  res.status(200).json({ success: true, message: "Notification marked read" });
+});
+
+export const markAllNotificationsRead = catchAsyncErrors(async (req, res, next) => {
+  const userId = req.user._id;
+  console.log('[markAllNotificationsRead] userId:', userId);
+  const user = await User.findById(userId);
+  console.log('[markAllNotificationsRead] found user:', user ? user._id : null, 'notificationsLength:', user && Array.isArray(user.notifications) ? user.notifications.length : 0);
+  if (!user) return next(new ErrorHandler("User not found", 404));
+  if (!Array.isArray(user.notifications) || user.notifications.length === 0) {
+    return res.status(200).json({ success: true, message: "No notifications to mark" });
+  }
+  user.notifications.forEach((n) => (n.isRead = true));
+  await user.save();
+  res.status(200).json({ success: true, message: "All notifications marked read" });
+});
+
 // // Logout function for dashboard admin
 export const logoutAdmin = catchAsyncErrors(async (req, res, next) => {
   res

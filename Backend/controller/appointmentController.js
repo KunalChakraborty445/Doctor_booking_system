@@ -100,6 +100,17 @@ export const updateAppointmentStatus = catchAsyncErrors(
       runValidators: true,
       useFindAndModify: false,
     });
+    // send notification to patient when appointment is accepted
+    try {
+      if (appointment.status === "Accepted" && appointment.patientId) {
+        const notificationText = `Your appointment on ${appointment.appointment_date} with Dr. ${appointment.doctor.firstName} ${appointment.doctor.lastName} has been accepted.`;
+        await User.findByIdAndUpdate(appointment.patientId, {
+          $push: { notifications: { message: notificationText } },
+        });
+      }
+    } catch (err) {
+      console.error("Notification push failed:", err);
+    }
     res.status(200).json({
       success: true,
       message: "Appointment Status Updated!",
