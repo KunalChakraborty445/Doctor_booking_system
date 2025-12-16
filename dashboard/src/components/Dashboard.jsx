@@ -64,9 +64,8 @@ const Dashboard = () => {
                 </h5>
               </div>
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Facilis, nam molestias. Eaque molestiae ipsam commodi neque.
-                Assumenda repellendus necessitatibus itaque.
+                Welcome back, Admin 👋<br />
+                You’re in control of doctors, patients, appointments, and the entire clinic workflow from here.
               </p>
             </div>
           </div>

@@ -45,13 +45,13 @@ dbConnection();
 app.use(errorMiddleware);
 
 if (process.env.NODE_ENV === "production") {
-  app.use("/app", express.static(path.join(__dirname, "../frontend/dist")));
-  app.use("/dashboard", express.static(path.join(__dirname, "../dashboard/dist")));
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.use(express.static(path.join(__dirname, "../dashboard/dist")));
 
-  app.get(["/app/*", "/dashboard/*"], (req, res) => {
-    const root = req.path.startsWith("/dashboard") ? "dashboard" : "frontend";
-    res.sendFile(path.join(__dirname, `../${root}/dist/index.html`));
-  });
+  app.get("*",(req, res) =>{
+    res.sendFile(path.join(__dirname, "../frontend", "dist","index.html"));
+    res.sendFile(path.join(__dirname, "../dashboard", "dist","index.html"));
+  })
 }
 
 export default app;
