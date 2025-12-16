@@ -179,7 +179,7 @@ npm run dev
 Create a `.env` file:
 
 ```env
-PORT=5000
+PORT=4000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 ```
