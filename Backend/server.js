@@ -9,7 +9,13 @@ cloudinary.v2.config({
 
 
 
-const PORT = process.env.PORT || 5000
- app.listen(PORT, () => {
-  console.log(`Server listening at port ${PORT}`);
-});
+
+const isServerless = !!process.env.VERCEL || !!process.env.LAMBDA_TASK_ROOT;
+if (!isServerless) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server listening at port ${PORT}`);
+  });
+}
+
+export default app;
